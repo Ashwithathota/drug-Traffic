@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp Web Clone (With File Attachments)</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <!-- Bootstrap Icons (for placeholders) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    /* Base reset & sizing */
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      /* Prevent full-page scrolling bars */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      /* Slight WhatsApp-like bg color */
+    }
+
+    /* Container that holds the new left nav bar, the chat list, and the chat area */
+    .whatsapp-container {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100vh;
+    }
+
+    /* FAR-LEFT NAV BAR */
+    .left-nav-bar {
+      width: 60px;
+      background-color: #f0f2f5;
+      border-right: 1px solid #ccc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1rem;
+      position: relative;
+    }
+
+    .icon-wrap {
+      margin: 1rem 0;
+      cursor: pointer;
+      color: #525252;
+    }
+
+    .icon-wrap.active {
+      background-color: #e2e2e2;
+      border-radius: 10%;
+      padding: 0.5rem;
+    }
+
+    hr.nav-divider {
+      width: 80%;
+      border: 0;
+      border-top: 1px solid #ccc;
+      margin: 0.5rem auto;
+    }
+
+    /* Example gradient circle icon */
+    .icon-gradient {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: conic-gradient(#42a5f5, #ab47bc, #42a5f5);
+    }
+
+    .nav-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #ccc;
+      margin-bottom: 1rem;
+      cursor: pointer;
+    }
+
+    /* MIDDLE PANEL: CHAT LIST */
+    .left-panel {
+      width: 380px;
+      max-width: 380px;
+      background-color: #ededed;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #ccc;
+    }
+
+    .left-panel-header {
+      background-color: #ededed;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .left-panel-search {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      background-color: #f6f6f6;
+    }
+
+    .left-panel-search .input-group-text {
+      background-color: #fff;
+      border: none;
+    }
+
+    .left-panel-search .form-control {
+      border: none;
+      border-radius: 20px;
+    }
+
+    .left-panel-chats {
+      flex-grow: 1;
+      overflow-y: auto;
+      background-color: #fff;
+    }
+
+    .chat-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .chat-item:hover {
+      background-color: #f5f5f5;
+    }
+
+    .chat-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #ccc;
+      margin-right: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .chat-info {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-info .chat-name {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      color: #000;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+
+    .chat-info .last-message {
+      font-size: 0.9rem;
+      color: #6b6b6b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+
+    .chat-time {
+      font-size: 0.75rem;
+      color: #6b6b6b;
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
+    /* RIGHT PANEL: CHAT SECTION */
+    .right-panel {
+      flex-grow: 1;
+      background-color: #efeae2;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Chat header */
+    .chat-header {
+      background-color: #008069;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .contact-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .contact-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #ccc;
+      margin-right: 0.75rem;
+      cursor: pointer;
+    }
+
+    .contact-name {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .chat-header-icons i {
+      font-size: 1.2rem;
+      margin-left: 1rem;
+      cursor: pointer;
+    }
+
+    /* Chat body (scrollable messages) */
+    .chat-body {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      background-color: #efeae2;
+      position: relative;
+    }
+
+    .message {
+      display: inline-block;
+      padding: 0.5rem 0.75rem;
+      margin: 0.5rem 0;
+      border-radius: 7px;
+      max-width: 70%;
+      word-wrap: break-word;
+      clear: both;
+    }
+
+    .received {
+      background-color: #fff;
+      float: left;
+      border-top-left-radius: 0;
+    }
+
+    .sent {
+      background-color: #d9fdd3;
+      float: right;
+      border-top-right-radius: 0;
+    }
+
+    /* For attached media within messages */
+    .message img,
+    .message video,
+    .message audio {
+      display: block;
+      margin-top: 0.5rem;
+      max-width: 200px;
+      border-radius: 5px;
+    }
+
+    /* Chat footer */
+    .chat-footer {
+      background-color: #f0f0f0;
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .chat-footer i {
+      font-size: 1.3rem;
+      color: #666;
+      cursor: pointer;
+    }
+
+    .chat-input {
+      flex-grow: 1;
+      border: none;
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      outline: none;
+      background-color: #fff;
+    }
+
+    .chat-input::placeholder {
+      color: #999;
+    }
+
+    .send-button {
+      background-color: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      color: #008069;
+      font-size: 1.5rem;
+    }
+
+    /* Custom scrollbar (optional) */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f0f0f0;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 3px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+      .left-nav-bar {
+        width: 50px;
+      }
+
+      .left-panel {
+        width: 240px;
+        max-width: 240px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .whatsapp-container {
+        flex-direction: column;
+      }
+
+      .left-nav-bar {
+        flex-direction: row;
+        width: 100%;
+        height: 60px;
+        align-items: center;
+        justify-content: start;
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+
+      .icon-wrap {
+        margin: 0 1rem;
+      }
+
+      hr.nav-divider {
+        display: none;
+      }
+
+      .nav-avatar {
+        margin: 0 1rem;
+      }
+
+      .left-panel {
+        width: 100%;
+        max-width: 100%;
+        height: 40vh;
+      }
+
+      .right-panel {
+        height: 60vh;
+      }
+    }
+
+    .message.error {
+  background-color: #f8d7da;  /* light red background */
+  color: #721c24;             /* dark red text */
+  border: 1px solid #f5c6cb;  /* red border */
+  padding: 10px;
+  border-radius: 4px;
+  margin: 5px 0;
+  text-align: center;
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="whatsapp-container">
+    <!-- FAR-LEFT NAV BAR -->
+    <div class="left-nav-bar">
+      <!-- Top icons -->
+      <div class="icon-wrap my-3">
+        <!-- Hamburger Menu -->
+        <i class="bi bi-list" style="font-size:1.5rem;"></i>
+      </div>
+      <div class="icon-wrap my-3 active">
+        <!-- Chat Icon (active) -->
+        <i class="bi bi-chat-left-text" style="font-size:1.5rem;"></i>
+      </div>
+      <div class="icon-wrap my-3">
+        <!-- Arrow/Refresh Icon -->
+        <i class="bi bi-arrow-repeat" style="font-size:1.5rem;"></i>
+      </div>
+      <div class="icon-wrap my-3">
+        <!-- A placeholder gradient circle -->
+        <span class="icon-gradient"></span>
+      </div>
+
+      <!-- Divider line -->
+      <hr class="nav-divider" />
+
+      <div class="icon-wrap my-3">
+        <!-- Star Icon -->
+        <i class="bi bi-star" style="font-size:1.5rem;"></i>
+      </div>
+      <div class="icon-wrap my-3">
+        <!-- Trash Icon -->
+        <i class="bi bi-trash" style="font-size:1.5rem;"></i>
+      </div>
+
+      <!-- Divider line -->
+      <hr class="nav-divider" />
+
+      <!-- User avatar at the bottom -->
+      <!-- Chat Avatar triggering the modal -->
+      <div class="mt-auto mb-3 nav-avatar"
+        style="cursor:pointer; width:40px; height:40px; border-radius:50%; overflow:hidden;" data-bs-toggle="modal"
+        data-bs-target="#logoutModal">
+        <img
+          src="https://cdn-icons-png.freepik.com/256/4140/4140048.png?uid=R159012559&ga=GA1.1.1242606527.1741498205&semt=ais_hybrid"
+          alt="Chat Avatar" style="width: 100%; height: 100%; object-fit: cover;" />
+      </div>
+
+      <!-- Bootstrap Logout Confirmation Modal -->
+      <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true"
+        style="z-index: 99999 !important;">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="logoutModalLabel">Logout Confirmation</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to logout?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <!-- The logout button redirects to the logout view -->
+              <a href="{% url 'whatsapp_logout' %}" class="btn btn-primary">Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MIDDLE PANEL: CHAT LIST -->
+    <div class="left-panel">
+      <!-- Header: optional user avatar + icons -->
+      <div class="left-panel-header">
+        <div class="d-flex align-items-center">
+          <div class="user-avatar"
+            style="width:40px; height:40px; border-radius:50%; background-color:#ccc; overflow:hidden;">
+            <img
+              src="https://cdn-icons-png.freepik.com/256/4140/4140048.png?uid=R159012559&ga=GA1.1.1242606527.1741498205&semt=ais_hybrid"
+              alt="User Avatar" style="width:100%; height:100%; object-fit:cover;" />
+          </div>
+
+        </div>
+        <div>
+          <i class="bi bi-camera-video-fill me-3" title="Status"></i>
+          <i class="bi bi-chat-left-text-fill me-3" title="New Chat"></i>
+          <i class="bi bi-three-dots-vertical" title="Menu"></i>
+        </div>
+      </div>
+
+      <!-- Search bar -->
+      <div class="left-panel-search">
+        <div class="input-group">
+          <span class="input-group-text" id="search-icon">
+            <i class="bi bi-search"></i>
+          </span>
+          <input type="text" class="form-control" placeholder="Search or start new chat" aria-label="Search"
+            aria-describedby="search-icon" />
+        </div>
+      </div>
+
+      <!-- Chat list -->
+      <div class="left-panel-chats">
+        <div class="chat-item">
+          <div class="chat-avatar"
+            style="width: 50px; height: 50px; border-radius: 50%; background-color: #ccc; overflow: hidden;">
+            <img
+              src="https://cdn-icons-png.freepik.com/256/6195/6195671.png?uid=R159012559&ga=GA1.1.1242606527.1741498205&semt=ais_hybrid"
+              alt="Chat Avatar" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+
+          <div class="chat-info">
+            <div class="d-flex w-100 justify-content-between">
+              <span class="chat-name">Model</span>
+              <span class="chat-time">21:59</span>
+            </div>
+            <span class="last-message">Image</span>
+          </div>
+        </div>
+        <div class="chat-item">
+          <div class="chat-avatar"
+            style="width: 50px; height: 50px; border-radius: 50%; background-color: #ccc; overflow: hidden;">
+            <img src="{% static 'cf.png' %}" alt="Chat Avatar" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+          <div class="chat-info">
+            <div class="d-flex w-100 justify-content-between">
+              <span class="chat-name">Codeleaf Projects</span>
+              <span class="chat-time">08:45</span>
+            </div>
+            <span class="last-message">a root of inovation</span>
+          </div>
+        </div>
+        <div class="chat-item">
+          <div class="chat-avatar"
+            style="width: 50px; height: 50px; border-radius: 50%; background-color: #ccc; overflow: hidden;">
+            <img
+              src="https://cdn-icons-png.freepik.com/256/4807/4807598.png?uid=R159012559&ga=GA1.1.1242606527.1741498205&semt=ais_hybrid"
+              alt="Chat Avatar" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+          <div class="chat-info">
+            <div class="d-flex w-100 justify-content-between">
+              <span class="chat-name">Major Project Group</span>
+              <span class="chat-time">Yesterday</span>
+            </div>
+            <span class="last-message">Nice Project !</span>
+          </div>
+        </div>
+        <div class="chat-item">
+          <div class="chat-avatar"
+            style="width: 50px; height: 50px; border-radius: 50%; background-color: #ccc; overflow: hidden;">
+            <img
+              src="https://cdn-icons-png.freepik.com/256/5956/5956837.png?uid=R159012559&ga=GA1.1.1242606527.1741498205&semt=ais_hybrid"
+              alt="Chat Avatar" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+          <div class="chat-info">
+            <div class="d-flex w-100 justify-content-between">
+              <span class="chat-name">Collage Group</span>
+              <span class="chat-time">Yesterday</span>
+            </div>
+            <span class="last-message">Tomorrow is Review one</span>
+          </div>
+        </div>
+        <div class="chat-item">
+          <div class="chat-avatar"
+            style="width: 50px; height: 50px; border-radius: 50%; background-color: #ccc; overflow: hidden;">
+            <img
+              src="https://cdn-icons-png.freepik.com/256/7300/7300752.png?uid=R159012559&ga=GA1.1.1242606527.1741498205&semt=ais_hybrid"
+              alt="Chat Avatar" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+          <div class="chat-info">
+            <div class="d-flex w-100 justify-content-between">
+              <span class="chat-name">Friend</span>
+              <span class="chat-time">21:13</span>
+            </div>
+            <span class="last-message">Clg tmr ?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: CHAT AREA -->
+    <div class="right-panel">
+      <!-- Chat Header -->
+      <div class="chat-header">
+        <div class="contact-info">
+          <div class="contact-avatar">
+            <img
+              src="https://cdn-icons-png.freepik.com/256/6195/6195671.png?uid=R159012559&ga=GA1.1.1242606527.1741498205&semt=ais_hybrid"
+              alt="Chat Avatar" style="width: 100%; height: 100%; object-fit: cover;" />
+
+          </div>
+          <div>
+            <div class="contact-name">Model</div>
+            <div style="font-size: 0.8rem;">Online</div>
+          </div>
+        </div>
+        <div class="chat-header-icons">
+          <i class="bi bi-search" title="Search"></i>
+          <i class="bi bi-telephone-fill" title="Voice Call"></i>
+          <i class="bi bi-camera-video-fill" title="Video Call"></i>
+          <i class="bi bi-three-dots-vertical" title="Menu"></i>
+        </div>
+      </div>
+
+      <!-- Chat Body (scrollable messages) -->
+      <div class="chat-body">
+        <!-- Example messages -->
+        <div class="message received">Hey !</div>
+        <div class="message received">What do you want to say ?</div>
+
+        <div class="message sent">
+          Hey Hello !
+        </div>
+      </div>
+
+      <!-- Chat Footer -->
+      <div class="chat-footer">
+        <!-- Emoji icon (non-functional) -->
+        <i class="bi bi-emoji-smile" title="Emoji"></i>
+        <!-- Paperclip icon to trigger file selection -->
+        <i class="bi bi-paperclip" id="attach-btn" title="Attach"></i>
+        <!-- Hidden file input that allows images, videos, audio -->
+        <input type="file" id="file-input" multiple accept="image/*,video/*,audio/*" style="display: none;" />
+        <!-- Text input for messages -->
+        <input type="text" class="chat-input" id="message-input" placeholder="Type a message" autocomplete="off" />
+        <!-- Send button -->
+        <button class="send-button" id="send-button">
+          <i class="bi bi-send-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Minimal JavaScript to handle sending typed messages & file attachments -->
+  <script>
+    const messageInput = document.getElementById('message-input');
+    const sendButton = document.getElementById('send-button');
+    const chatBody = document.querySelector('.chat-body');
+    const attachBtn = document.getElementById('attach-btn');
+    const fileInput = document.getElementById('file-input');
+  
+    let attachments = [];
+  
+    attachBtn.addEventListener('click', () => {
+      fileInput.click();
+    });
+  
+    fileInput.addEventListener('change', () => {
+      attachments = [...fileInput.files];
+    });
+  
+    function createMediaBubble(file) {
+      const url = URL.createObjectURL(file);
+      const bubble = document.createElement('div');
+      bubble.classList.add('message', 'sent');
+  
+      if (file.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.src = url;
+        bubble.appendChild(img);
+      } else if (file.type.startsWith('video/')) {
+        const video = document.createElement('video');
+        video.src = url;
+        video.controls = true;
+        bubble.appendChild(video);
+      } else if (file.type.startsWith('audio/')) {
+        const audio = document.createElement('audio');
+        audio.src = url;
+        audio.controls = true;
+        bubble.appendChild(audio);
+      } else {
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.textContent = file.name;
+        bubble.appendChild(link);
+      }
+      return bubble;
+    }
+  
+    // Function to show a centered pop-up error message
+    function showPopupMessage(message) {
+      // Create overlay
+      const popupOverlay = document.createElement('div');
+      popupOverlay.style.position = 'fixed';
+      popupOverlay.style.top = '0';
+      popupOverlay.style.left = '0';
+      popupOverlay.style.width = '100%';
+      popupOverlay.style.height = '100%';
+      popupOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+      popupOverlay.style.display = 'flex';
+      popupOverlay.style.justifyContent = 'center';
+      popupOverlay.style.alignItems = 'center';
+      popupOverlay.style.zIndex = '10000';
+  
+      // Create pop-up box
+      const popupBox = document.createElement('div');
+      popupBox.style.backgroundColor = '#fff';
+      popupBox.style.padding = '20px';
+      popupBox.style.borderRadius = '8px';
+      popupBox.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.3)';
+      popupBox.style.textAlign = 'center';
+      popupBox.style.maxWidth = '300px';
+      popupBox.innerText = message;
+  
+      // Create close button
+      const closeButton = document.createElement('button');
+      closeButton.innerText = 'OK';
+      closeButton.style.marginTop = '15px';
+      closeButton.style.padding = '8px 16px';
+      closeButton.style.border = 'none';
+      closeButton.style.borderRadius = '4px';
+      closeButton.style.backgroundColor = '#007bff';
+      closeButton.style.color = '#fff';
+      closeButton.style.cursor = 'pointer';
+      closeButton.addEventListener('click', () => {
+        document.body.removeChild(popupOverlay);
+      });
+  
+      // Append button and add overlay to document
+      popupBox.appendChild(document.createElement('br'));
+      popupBox.appendChild(closeButton);
+      popupOverlay.appendChild(popupBox);
+      document.body.appendChild(popupOverlay);
+    }
+  
+    function sendMessage() {
+      const text = messageInput.value.trim();
+      const formData = new FormData();
+  
+      if (text !== '') {
+        formData.append('message', text);
+      }
+  
+      attachments.forEach((file) => {
+        formData.append('attachments', file);
+      });
+  
+      if (text !== '' || attachments.length > 0) {
+        fetch('/send-message/', {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'error') {
+            showPopupMessage(data.message);
+          } else if (data.status === 'success') {
+            if (text !== '') {
+              const messageDiv = document.createElement('div');
+              messageDiv.classList.add('message', 'sent');
+              messageDiv.textContent = text;
+              chatBody.appendChild(messageDiv);
+            }
+  
+            attachments.forEach((file) => {
+              const mediaBubble = createMediaBubble(file);
+              chatBody.appendChild(mediaBubble);
+            });
+  
+            messageInput.value = '';
+            attachments = [];
+            fileInput.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      }
+    }
+  
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  
+    sendButton.addEventListener('click', sendMessage);
+  
+    messageInput.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+  </script>
+  
+  
+  
+</body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+{% if messages %}
+{% for message in messages %}
+{% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+<script>
+    swal({
+        title: "Warning!",
+        text: "{{ message }}",
+        icon: "warning",
+        button: "OK",
+    });
+</script>
+{% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+<script>
+    swal({
+        title: "Info :)",
+        text: "{{ message }}",
+        icon: "info",
+        button: "OK",
+    });
+</script>
+{% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+<script>
+    swal({
+        title: "Error!",
+        text: "{{ message }}",
+        icon: "error",
+        button: "OK",
+    });
+</script>
+{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+<script>
+    swal({
+        title: "Success!",
+        text: "{{ message }}",
+        icon: "success",
+        button: "OK",
+    });
+</script>
+{% endif %}
+{% endfor %}
+{% endif %}
+</html>

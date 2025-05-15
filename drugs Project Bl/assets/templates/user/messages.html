@@ -1,0 +1,599 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Ogani Template">
+    <meta name="keywords" content="Ogani, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hate Speech Detector</title>
+    
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+    
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="{% static 'user/css/bootstrap.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'user/css/font-awesome.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'user/css/elegant-icons.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'user/css/nice-select.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'user/css/jquery-ui.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'user/css/owl.carousel.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'user/css/slicknav.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'user/css/style.css' %}" type="text/css">
+    
+    <style>
+        *{
+            box-sizing: border-box;
+            margin: 0px;
+            padding: 0px;
+            /* background-color: #000; */
+        }
+        
+        .hero__categories ul li a {
+            border-radius: 10px; /* Rounded corners */
+            font-weight: 500; /* Medium font weight */
+        }
+        
+        .hero__categories ul li a:hover {
+            background-color: #c3c8ce; /* Light gray background on hover */
+            transform: translateY(-4px); /* Move up slightly on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow on hover */
+            border-color: #adb5bd; /* Darker border on hover */
+        }
+        
+        .unique-container {
+            display: flex;
+            height: 100vh; /* Full height of the viewport */
+        }
+        
+        .unique-scrollable-col {
+            height: 100vh;
+            overflow-y: auto;
+            /* padding-right: 15px;  */
+            /* background-color: #000; */
+        }
+        
+        .unique-scrollable-col::-webkit-scrollbar {
+            width: 0; /* Remove scrollbar space */
+            background: transparent; /* Optional: just to make scrollbar invisible */
+        }
+        
+        .unique-hero-item {
+            background-image: url('img/hero/banner.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 20px;
+        }
+        
+        .unique-hero-text {
+            color: #fff;
+            text-align: center;
+        }
+        
+        .unique-hero-text span {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .unique-hero-text h2 {
+            font-size: 36px;
+            margin: 10px 0;
+        }
+        
+        .unique-hero-text p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        
+        .unique-hero-text .unique-primary-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ff7f50;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        
+        
+        .custom-post-section {
+            background-color: #0b0b0bb0;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .custom-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .custom-profile-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .custom-username {
+            font-weight: 600;
+        }
+        
+        .custom-textarea {
+            width: 100%;
+            height: 70px;
+            background-color: #11111149;
+            color: #fff;
+            border: .5px solid white;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            resize: none;
+        }
+        
+        .custom-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .custom-icons {
+            display: flex;
+        }
+        
+        .custom-icon {
+            font-size: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+            color: #ffffff;
+        }
+        
+        .custom-post-button {
+            background-color: #1da1f2;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        
+        .card-body2 {
+            transition: transform .5s;
+        }
+        
+        .card-body2:hover{
+            background-color: #eef2f6; /* Light gray background on hover */
+            transform: translateY(-5px); /* Move up slightly on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card-body5{
+            background-color: #eef2f6; 
+        }
+        
+        .card-body3:hover{
+            background-color: #eef2f6; /* Light gray background on hover */
+            transform: translateY(-4px); /* Move up slightly on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-here{
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            /* box-shadow: 0 1px 15px rgb(30, 30, 30); */
+        }
+        
+        
+        
+        .comment-profile-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border: 2px solid #ddd;
+        }
+        
+        .comment-content {
+            width: calc(100% - 60px);
+        }
+        
+        .comment-header {
+            margin-bottom: 5px;
+        }
+        
+        .comment-header strong {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #333;
+        }
+        
+        .comment-header .text-muted {
+            font-size: 0.9rem;
+        }
+        
+        
+        
+        .comment-text {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #252323;
+            
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+    
+    
+    
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- <div class="header__logo d-flex align-items-center" style="padding: 10px; background-color: #f8f9fa; border-radius: 10px;">
+                        <a href="{% url 'index' %}"><img src="{% static 'main/img/team-1.jpg' %}" style="width: 80px; border-radius: 50%; box-shadow: 0px 4px 6px rgba(0,0,0,0.1);" alt="Logo"></a>
+                        &nbsp;&nbsp;&nbsp;<span class="ms-3" style="font-size: 20px; color: #333; font-weight: 800; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);"> Welcome, Upender</span>
+                    </div> -->
+                </div>
+                <!-- <div class="col-lg-4">
+                    <div class="header__cart">
+                        <ul>
+                            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                        </ul>
+                        
+                    </div>
+                </div> -->
+            </div>
+            <div class="humberger__open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+    
+    <!-- Hero Section Begin -->
+    <section class="hero pb-0 container-fluid">
+        <div class=" pb-0" style="padding-bottom: 0px; margin-bottom: 0px;">
+           <div class="row navbar-here shadow-sm" style="background-color: #FE0F7F;">
+                <div class="header__logo col-9 d-flex align-items-center" style="border-radius: 10px;">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i class="fa fa-comments fa-3x" style="color: #fff;"></i>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="" style="font-size: 30px; color: #ffffff; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
+                       Instagram
+                    </span>
+                </div>
+                <div class="col-3 header__cart text-center">
+                    <ul class="" >
+                        <li><a href="{% url 'user_messages' %}"><i class="fa fa-envelope text-white"></i> <span style="background-color: red;">{{ unread_messages_count }}</span></a></li>
+                        <li><a href="#"><i class="fa fa-bell text-white"></i> <span  style="background-color: red;">{{total_notification}}</span></a></li>
+                        <li>
+                            <a href="{% url 'fr_req' %}"><i class="fa fa-users text-white"></i> 
+                                <span style="background-color: red;">{{ pending_requests_count }}</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 navbar-here2 py-3" style="border-right: 1px solid rgba(255, 255, 255, 0.418); border-bottom-right-radius: 10px; background-color: #CF087F; position: relative;">
+                        <div class="hero__categories  px-3 rounded " >
+                            <ul class="list-unstyled" style="border: none; padding-left: 10px;">
+                                <li class="mb-1">
+                                    <a href="{% url 'user_dashboard' %}" class="text-white  shadow-sm p-1 px-3" style=" background-color: #CF087F; transition: all 0.3s;">
+                                        <i class="fa fa-home"></i> &nbsp; Home
+                                    </a>
+                                </li>
+                                <li class="mb-1">
+                                    <a href="{% url 'user_profile' %}" class="text-white shadow-sm p-1 px-3" style="background-color: #CF087F; transition: all 0.3s;">
+                                        <i class="fa fa-user-circle"></i> &nbsp; My Profile
+                                    </a>
+                                </li>
+                                <li class="mb-1">
+                                    <a href="{% url 'fr_req' %}" class="text-white shadow-sm p-1 px-3" style="background-color: #CF087F; transition: all 0.3s;">
+                                        <i class="fa fa-user-plus"></i> &nbsp; Friend Requests
+                                    </a>
+                                </li>
+                                <li class="mb-1">
+                                    <a href="{% url 'res' %}" class="text-white shadow-sm p-1 px-3" style="background-color: #CF087F; transition: all 0.3s;">
+                                        <i class="fa fa-users"></i> &nbsp; Find Friend 
+                                    </a>
+                                </li>
+                                <li class="mb-1">
+                                    <a href="{% url 'my_posts' %}" class="text-white shadow-sm p-1 px-3" style="background-color: #CF087F; transition: all 0.3s;">
+                                        <i class="fa fa-sticky-note"></i> &nbsp; My Posts
+                                        
+                                    </a>
+                                </li>
+                                <li class="mb-1">
+                                    <a href="{% url 'user_messages' %}" class="shadow-sm p-1 px-3" style="color: #fdfd44; background-color: #CF087F; transition: all 0.3s;">
+                                        <i class="fa fa-comments"></i> &nbsp; Messages
+                                    </a>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        <div style="position: absolute; bottom: 50; left: 0px; right: 0; background-color: #63a4f8; color: white;" class=" p-3 container p-4">
+                            <a href="{% url 'index' %}">
+                                <img src="{{ user_det.photo.url }}" style="width: 50px; height: 50px; border-radius: 50%; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); background-color: #fff;" alt="Logo">
+                            </a>&nbsp;&nbsp;&nbsp;
+                            <span class="" style="font-size: 14px; color: #ffffff; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);"> Hello, {{ user_det.full_name }}</span>
+                            <br>
+                            <a href="{% url 'user_logout' %}" class="btn btn-sm col-5 mx-auto" style="margin-top: 7%; background-color: tomato; color: white; font-size: 15px; font-weight: 600; padding: 10px 20px; border-radius: 20px;">Logout</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 px-4 unique-scrollable-col" style="padding: 0px;">
+                        <div class="">
+                            <div class="col-12 row bg-white">
+                                
+                            </div>
+                            <div class="custom-post-section mt-2">
+                                <div class="">
+                                    <form method="post" action="">
+                                        {% csrf_token %}
+                                        <div class="custom-header">
+                                            <img src="{% static 'main/img/team-1.jpg' %}" alt="Profile Image" class="custom-profile-image">
+                                            <span class="custom-username">Pick a friend and send your message !</span>
+                                        </div>
+                                        <textarea class="custom-textarea" name="message" placeholder="Type Your message !"></textarea>
+                                        <div id="previewContainer" class="text-center"></div> 
+                                        <div class="custom-footer">
+                                            <div class="custom-select-container" style="width: 60%; position: relative;">
+                                                <select name="to_user" id="uploadType" class="custom-select" style="width: 100%; padding: 8px; font-size: 25px; border: 1px solid #ccc; border-radius: 4px; background-color: #f8f9fa; cursor: pointer;">
+                                                    <option value="none" style="font-size: 18px; font-weight: 800;">Select a friend</option>
+                                                    {% for friend in friends %}
+                                                    <option value="{{ friend.id }}">{{ friend.full_name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <button class="custom-post-button col-3" id="postButton" style="padding: 8px 16px; background-color: #ff0000; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;">
+                                                Send
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="col-12 my-3">
+                            <p style="font-size: 20px; font-family: 'Times New Roman', Times, serif; font-weight: 600;"> Your Messages </p>
+                        </div>
+                        
+                        <div class="posts-feed ">
+                            {% for message in my_messages %}
+                            <div class="card card-body2 mb-3" style="box-shadow: 0 8px 16px rgba(0,0,0,0.15); border-radius: 20px;">
+                                <div class="card-body d-flex">
+                                    <img src="{{ message.from_user.photo.url }}" alt="User Image" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover; border: 2px solid #ddd;">
+                                    <div class="col-11">
+                                        <h5 class="card-title" style="font-weight: 800; margin-bottom: 5px; color: #2c3e50;">{{ message.from_user.full_name }}</h5>
+                                        <h6 class="card-subtitle mb-2" style="font-size: 0.85rem; color: #7f8c8d;">{{ message.timestamp|timesince }}</h6>
+                                        <div class="m-2">
+                                            <div class="card-text col-12" style="line-height: 1.8; color: #000000;">{{ message.message }}</div>
+                                        </div>
+                                    </div>
+                                    {% if message.read == 'pending' %}
+                                    <a href="{% url 'mark_as_read' message_id=message.pk %}" class="btn btn-sm btn-outline-primary mark-read-btn mt-3 ms-auto" style="position: absolute; top: 10px; right: 10px;">Mark as Read</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                    </div>
+                    
+                    
+                    <div class="col-lg-3 px-2" style="background-color: #CF087F; border-bottom-left-radius: 10px;">
+                        <h6 class="text-white text-center pt-2 px-2 m-0" style="font-weight: 900; font-size: 20px; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">What's Happening ?</h6>
+                        <div class="posts-feed mt-3 pl-1">
+                            {% if friends %}
+                            {% if latest_posts %}
+                            {% for post in latest_posts %}
+                            <div class="card mb-1" style="box-shadow: 0 8px 16px rgba(0,0,0,0.15);">
+                                <div class="card-body card-body3 d-flex p-0 mb-2 align-items-center">
+                                    <div class="d-flex align-items-center me-2 mx-2">
+                                        <div class="bg-success rounded-circle" style="width: 10px; height: 10px;"></div>
+                                    </div>
+                                    <div class="py-2">
+                                        {% if post.video %}
+                                        <h6 class="card-title" style="font-size: 15px; font-weight: 500; margin-bottom: 5px; color: #2c3e50;">
+                                            {{ post.user.full_name }} posted a video
+                                        </h6>
+                                        {% elif post.image %}
+                                        <h6 class="card-title" style="font-size: 15px; font-weight: 500; margin-bottom: 5px; color: #2c3e50;">
+                                            {{ post.user.full_name }} posted an image
+                                        </h6>
+                                        {% elif post.audio %}
+                                        <h6 class="card-title" style="font-size: 15px; font-weight: 500; margin-bottom: 5px; color: #2c3e50;">
+                                            {{ post.user.full_name }} posted audio
+                                        </h6>
+                                        {% else %}
+                                        <h6 class="card-title" style="font-size: 15px; font-weight: 500; margin-bottom: 5px; color: #2c3e50;">
+                                            {{ post.user.full_name }} posted text
+                                        </h6>
+                                        {% endif %}
+                                        <h6 class="card-subtitle mb-2" style="font-size: 13px; color: #7f8c8d;">
+                                            {{ post.timestamp|timesince }} ago
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <p style="font-family: 'Arial, sans-serif'; font-size: 16px; color: #333; background-color: #f8f9fa; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" class="text-center font-weight-bold card-body2">
+                                No new posts from your friends
+                            </p>
+                            {% endif %}
+                            
+                            {% else %}
+                            <p style="font-family: 'Arial, sans-serif'; font-size: 16px; color: #333; background-color: #f8f9fa; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" class="text-center font-weight-bold card-body2">
+                                Make new friends to see posts
+                            </p>
+                            
+                            {% endif %}
+                            
+                        </div>
+                        
+                        <h6 class="text-white text-center p-2 m-0" style="font-weight: 900; font-size: 20px; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+                            {% if not friends and suggested_friends %}
+                            Suggested Friends
+                            {% else %}
+                            Friends
+                            {% endif %}
+                        </h6>
+                        
+                        <div class="posts-feed mt-2">
+                            <div class="mb-1">
+                                {% if not friends %}
+                                {% if suggested_friends %}
+                                <div class="row mx-0 px-0 text-center">
+                                    {% for friend in suggested_friends %}
+                                    <div class="col-4 mb-4">
+                                        <abbr title="{{ friend.full_name }}">
+                                            <img src="{% if friend.photo %}{{ friend.photo.url }}{% else %}{% static 'main/img/default-profile.jpg' %}{% endif %}" alt="User Image" class="rounded-circle card-body2 me-3" style="width: 50px; height: 50px; object-fit: cover; border: 2px solid #ddd;">
+                                        </abbr>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                <p style="font-family: 'Arial, sans-serif'; font-size: 16px; color: #333; background-color: #f8f9fa; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">No suggested friends based on interests or location.</p>
+                                {% endif %}
+                                {% else %}
+                                <div class="row mx-0 px-0 text-center">
+                                    {% for friend in friends %}
+                                    <div class="col-4 mb-4">
+                                        {% if friend.photo %}
+                                        <abbr title="{{ friend.full_name }}">
+                                            <img src="{{ friend.photo.url }}" alt="User Image" class="rounded-circle card-body2 card-body5 me-3" style="width: 50px; height: 50px; object-fit: cover; border: 2px solid #ddd;">
+                                        </abbr>
+                                        {% else %}
+                                        <abbr title="{{ friend.full_name }}">
+                                            <img src="{% static 'main/img/default-user.jpg' %}" alt="User Image" class="rounded-circle card-body2 me-3" style="width: 50px; height: 50px; object-fit: cover; border: 2px solid #ddd;">
+                                        </abbr>
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        
+                        <h6 class="text-white text-center m-0  mb-1" style="font-weight: 900; font-size: 20px; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">New Friends</h6>
+                        <div class="posts-feed pl-1">
+                            <div class="card" style="box-shadow: 0 8px 16px rgba(0,0,0,0.15);  ">
+                                <div class="card-body card-body2 d-flex p-0 align-items-center">
+                                    <div class="d-flex align-items-center me-2 mx-2">
+                                        <div class="bg-success rounded-circle" style="width: 10px; height: 10px;"></div>
+                                    </div>
+                                    {% if latest_friend_request_from_user %}
+                                    <div class="pt-2">
+                                        <h6 class="card-title" style="font-size: 15px; font-weight: 500;color: #2c3e50;">{{ latest_friend_request_from_user.full_name }}</h6>
+                                        <h6 class="card-subtitle mb-2" style="font-size: 13px; color: #7f8c8d;">You and {{ latest_friend_request_from_user.full_name }} are friends from now</h6>
+                                    </div>
+                                    {% else %}
+                                    <div class="pt-2">
+                                        <h6 class="card-subtitle mb-2" style="font-family: 'Arial, sans-serif'; font-size: 16px; color: #333; background-color: #f8f9fa; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">Waiting for new friends.</h6>
+                                    </div>
+                                    {% endif %}
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+        <!-- Hero Section End -->
+        
+        <!-- <div class="header__cart text-center">
+            <ul>
+                <li><a href="#"><i class="fa fa-envelope"></i> <span>1</span></a></li>
+                <li><a href="#"><i class="fa fa-bell"></i> <span>3</span></a></li>
+                <li><a href="#"><i class="fa fa-users"></i> <span>1</span></a></li>
+            </ul>
+        </div> -->
+        <script>
+            document.querySelectorAll('.comment-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var commentSection = this.closest('.card-body').querySelector('.comment-section');
+                    if (commentSection.style.display === 'none' || commentSection.style.display === '') {
+                        commentSection.style.display = 'block';
+                    } else {
+                        commentSection.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+        
+        <!-- Footer Section End -->
+        
+        <!-- Js Plugins -->
+        <script src="{% static 'user/js/jquery-3.3.1.min.js' %}"></script>
+        <script src="{% static 'user/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'user/js/jquery.nice-select.min.js' %}"></script>
+        <script src="{% static 'user/js/jquery-ui.min.js' %}"></script>
+        <script src="{% static 'user/js/jquery.slicknav.js' %}"></script>
+        <script src="{% static 'user/js/mixitup.min.js' %}"></script>
+        <script src="{% static 'user/js/owl.carousel.min.js' %}"></script>
+        <script src="{% static 'user/js/main.js' %}"></script>
+        
+        
+        
+    </body>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
+    {% if messages %}
+    {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+    <script>
+        swal({
+            title: "Warning!",
+            text: "{{ message }}",
+            icon: "warning",
+            button: "OK",
+        });
+    </script>
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+    <script>
+        swal({
+            title: "Info :)",
+            text: "{{ message }}",
+            icon: "info",
+            button: "OK",
+        });
+    </script>
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+    <script>
+        swal({
+            title: "Error!",
+            text: "{{ message }}",
+            icon: "error",
+            button: "OK",
+        });
+    </script>
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <script>
+        swal({
+            title: "Success!",
+            text: "{{ message }}",
+            icon: "success",
+            button: "OK",
+        });
+    </script>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    </html>
