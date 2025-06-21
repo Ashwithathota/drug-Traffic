@@ -43,15 +43,15 @@ This project presents a software-based investigative solution designed to detect
    ```bash
    git clone https://github.com/yourusername/drug-trafficking-monitoring.git
    cd drug-trafficking-monitoring
-**2. Create Virtual Environment**
+2. **Create Virtual Environment**
    python -m venv env
    source env/bin/activate  # On Windows: env\Scripts\activate
-**3.Install Requirements**
+3. **Install Requirements**
    pip install -r requirements.txt
-**4.Run Migrations**
+4. **Run Migrations**
   python manage.py makemigrations
   python manage.py migrate
-**5.Start Server**
+5. **Start Server**
   python manage.py runserver
   
 📁 **Folder Structure**
